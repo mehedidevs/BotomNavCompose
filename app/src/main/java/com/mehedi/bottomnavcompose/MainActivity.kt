@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
+import com.mehedi.bottomnavcompose.presentation.bottomnav.MainScreen
 import com.mehedi.bottomnavcompose.presentation.grid.ScrollableMultipleGrids
 import com.mehedi.bottomnavcompose.ui.theme.BottomNavComposeTheme
 
@@ -22,7 +23,9 @@ class MainActivity : ComponentActivity() {
 
                     Box(modifier = Modifier.padding(innerPadding)) {
 
-                        ScrollableMultipleGrids()
+                        //   ScrollableMultipleGrids()
+
+                        MainScreen()
                     }
 
                 }
