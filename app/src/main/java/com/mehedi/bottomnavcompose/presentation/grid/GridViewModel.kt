@@ -1,37 +1,20 @@
-package com.mehedi.bottomnavcompose
+package com.mehedi.bottomnavcompose.presentation.grid
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.mehedi.bottomnavcompose.presentation.grid.compoments.Category
+import com.mehedi.bottomnavcompose.presentation.grid.compoments.FeaturedItem
+import com.mehedi.bottomnavcompose.presentation.grid.compoments.HomeSection
+import com.mehedi.bottomnavcompose.presentation.grid.compoments.PopularItem
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
-// Data classes
-data class FeaturedItem(
-    val id: String,
-    val title: String
-)
-
-data class Category(
-    val id: String,
-    val name: String
-)
-
-data class PopularItem(
-    val id: String,
-    val title: String
-)
 
 class HomeViewModel : ViewModel() {
-    private val _featuredItems = MutableStateFlow<List<FeaturedItem>>(emptyList())
-    val featuredItems = _featuredItems.asStateFlow()
-
-    private val _categories = MutableStateFlow<List<Category>>(emptyList())
-    val categories = _categories.asStateFlow()
-
-    private val _popularItems = MutableStateFlow<List<PopularItem>>(emptyList())
-    val popularItems = _popularItems.asStateFlow()
+    private val _sections = MutableStateFlow<List<HomeSection>>(emptyList())
+    val sections = _sections.asStateFlow()
 
     private val _isLoading = MutableStateFlow(false)
     val isLoading = _isLoading.asStateFlow()
@@ -43,14 +26,21 @@ class HomeViewModel : ViewModel() {
     private fun loadData() {
         viewModelScope.launch {
             _isLoading.value = true
-            // Simulate network delay
             delay(1500)
             try {
-                _featuredItems.value = getDummyFeaturedItems()
-                _categories.value = getDummyCategories()
-                _popularItems.value = getDummyPopularItems()
-            } catch (e: Exception) {
-                // Handle error
+                // Get your data
+                val featuredItems = getDummyFeaturedItems()
+                val categories = getDummyCategories()
+                val popularItems = getDummyPopularItems()
+
+                // Create sections based on available data
+                val sections = buildList {
+                    if (featuredItems.isNotEmpty()) add(HomeSection.Featured(featuredItems))
+                    if (categories.isNotEmpty()) add(HomeSection.Category(categories))
+                    if (popularItems.isNotEmpty()) add(HomeSection.Popular(popularItems))
+                }
+
+                _sections.value = sections
             } finally {
                 _isLoading.value = false
             }
